@@ -6,7 +6,6 @@ import br.com.missio.todolist.repositories.TodoRepository;
 
 import br.com.missio.todolist.services.exceptions.ResorceNotFoundExceprion;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,21 +44,20 @@ public class TodoService {
     @Transactional(readOnly = true)
     public TodoDTO findById(Long id) {
        Todo todo = todoRepository.findById(id).orElseThrow(
-               () -> new ResorceNotFoundExceprion("Recurso nao encontrado" + id));
+               () -> new ResorceNotFoundExceprion("Recurso nao encontrado"));
        return new TodoDTO(todo);
     }
 
+    @Transactional
     public TodoDTO update(Long id, TodoDTO dto) {
+        Todo entity = todoRepository.findById(id)
+                .orElseThrow(() -> new ResorceNotFoundExceprion("Recurso nao encontrado: "));
 
-        try {Todo entity = todoRepository.getReferenceById(id);
-            modelMapper.getConfiguration().setSkipNullEnabled(true);
-            modelMapper.map(dto, entity);
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(dto, entity);
 
-            entity = todoRepository.save(entity);
-            return new TodoDTO(entity);
-        } catch (Exception e) {
-            throw new ResorceNotFoundExceprion("Recurso nao encontrado" );
-        }
+        entity = todoRepository.save(entity);
+        return new TodoDTO(entity);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
