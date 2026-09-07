@@ -2,6 +2,7 @@ package br.com.missio.todolist.controllers;
 
 import br.com.missio.todolist.dto.TodoDTO;
 import br.com.missio.todolist.services.TodoService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<TodoDTO> create(@RequestBody TodoDTO dto) {
+    public ResponseEntity<TodoDTO> create(@Valid @RequestBody TodoDTO dto) {
         dto = todoService.create(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -43,7 +44,7 @@ public class TodoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TodoDTO> update(@PathVariable Long id, @RequestBody TodoDTO dto) {
+    public ResponseEntity<TodoDTO> update( @PathVariable Long id,@Valid @RequestBody TodoDTO dto) {
         dto= todoService.update(id, dto);
         return ResponseEntity.ok(dto);
     }
