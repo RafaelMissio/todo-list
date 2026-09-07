@@ -1,7 +1,6 @@
 package br.com.missio.todolist.controllers;
 
 import br.com.missio.todolist.dto.TodoDTO;
-import br.com.missio.todolist.entities.Todo;
 import br.com.missio.todolist.services.TodoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,10 +29,17 @@ public class TodoController {
 
     @GetMapping
     public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable){
-
         return ResponseEntity.ok().body((Page<TodoDTO>) todoService.findAll(pageable));
     }
 
+    @PostMapping
+    public ResponseEntity<Page<TodoDTO>> create(@RequestBody TodoDTO todo) {
+        TodoDTO createdTodo = todoService.create(todo);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(createdTodo.getId()).toUri();
+        return ResponseEntity.created(uri).body((Page<TodoDTO>) createdTodo);
+
+    }
 
 
 
