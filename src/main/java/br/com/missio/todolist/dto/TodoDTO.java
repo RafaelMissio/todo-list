@@ -1,15 +1,25 @@
 package br.com.missio.todolist.dto;
 
 import br.com.missio.todolist.entities.Todo;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.*;
 
 public class TodoDTO {
 
     private Long id;
+
+    @NotBlank(message = "O nome não pode ser vazio")
+    @Size(max = 50, min = 6, message = "O nome não pode ter mais de 50 caracteres")
     private String nome;
+
+    @Size(max = 200, message = "A descrição não pode ter mais de 200 caracteres")
     private String descricao;
+
+    @NotNull(message = "O campo concluido é obrigatório")
     private boolean concluido;
+
+    @Min(value = 1, message = "Prioridade mínima é 1")
+    @Max(value = 5, message = "Prioridade máxima é 5")
+//    @NotNull(message = "Prioridade é obrigatória")
     private int prioridade;
 
     private TodoDTO() {
