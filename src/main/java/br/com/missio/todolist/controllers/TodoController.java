@@ -42,6 +42,18 @@ public class TodoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TodoDTO> update(@PathVariable Long id, @RequestBody TodoDTO dto) {
+        dto= todoService.update(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Page<TodoDTO>> delete(@PathVariable Long id, Pageable pageable) {
+        Page<TodoDTO> dto = todoService.delete(id, pageable);
+        return ResponseEntity.ok(dto);
+    }
+
 
 
 }

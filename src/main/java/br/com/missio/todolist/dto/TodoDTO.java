@@ -1,6 +1,8 @@
 package br.com.missio.todolist.dto;
 
 import br.com.missio.todolist.entities.Todo;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TodoDTO {
 
@@ -10,20 +12,29 @@ public class TodoDTO {
     private boolean concluido;
     private int prioridade;
 
-    public TodoDTO(Long id, String nome, String descricao, boolean concluido, int prioridade) {
-        this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.concluido = concluido;
-        this.prioridade = prioridade;
+    public TodoDTO() {
+
     }
+
+//    @JsonCreator
+//    public TodoDTO(@JsonProperty("id") Long id,
+//                   @JsonProperty("nome") String nome,
+//                   @JsonProperty("descricao") String descricao,
+//                   @JsonProperty("concluido") boolean concluido,
+//                   @JsonProperty("prioridade") int prioridade) {
+//        this.id = id;
+//        this.nome = nome;
+//        this.descricao = descricao;
+//        this.concluido = concluido;
+//        this.prioridade = prioridade;
+//    }
 
     public TodoDTO(Todo entity) {
         id = entity.getId();
         nome = entity.getNome();
         descricao = entity.getDescricao();
         concluido = entity.isConcluido();
-       prioridade = entity.getPrioridade();
+        prioridade = entity.getPrioridade();
     }
 
     public Long getId() {
@@ -44,5 +55,25 @@ public class TodoDTO {
 
     public int getPrioridade() {
         return prioridade;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setConcluido(boolean concluido) {
+        this.concluido = concluido;
+    }
+
+    public void setPrioridade(int prioridade) {
+        this.prioridade = prioridade;
     }
 }
