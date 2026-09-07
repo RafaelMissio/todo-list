@@ -49,9 +49,9 @@ public class TodoController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Page<TodoDTO>> delete(@PathVariable Long id, Pageable pageable) {
-        Page<TodoDTO> dto = todoService.delete(id, pageable);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        todoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 
