@@ -12,22 +12,10 @@ public class TodoDTO {
     private boolean concluido;
     private int prioridade;
 
-    public TodoDTO() {
+    private TodoDTO() {
 
     }
 
-//    @JsonCreator
-//    public TodoDTO(@JsonProperty("id") Long id,
-//                   @JsonProperty("nome") String nome,
-//                   @JsonProperty("descricao") String descricao,
-//                   @JsonProperty("concluido") boolean concluido,
-//                   @JsonProperty("prioridade") int prioridade) {
-//        this.id = id;
-//        this.nome = nome;
-//        this.descricao = descricao;
-//        this.concluido = concluido;
-//        this.prioridade = prioridade;
-//    }
 
     public TodoDTO(Todo entity) {
         id = entity.getId();

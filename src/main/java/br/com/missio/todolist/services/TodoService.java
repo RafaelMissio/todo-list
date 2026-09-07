@@ -4,13 +4,15 @@ import br.com.missio.todolist.dto.TodoDTO;
 import br.com.missio.todolist.entities.Todo;
 import br.com.missio.todolist.repositories.TodoRepository;
 
+import br.com.missio.todolist.services.exceptions.ResorceNotFoundExceprion;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+
 
 
 
@@ -42,22 +44,31 @@ public class TodoService {
 
     @Transactional(readOnly = true)
     public TodoDTO findById(Long id) {
-       Todo todo = todoRepository.findById(id).orElseThrow(() ->
-               new RuntimeException("Todo not found with id: " + id));
+       Todo todo = todoRepository.findById(id).orElseThrow(
+               () -> new ResorceNotFoundExceprion("Recurso nao encontrado" + id));
        return new TodoDTO(todo);
     }
 
     public TodoDTO update(Long id, TodoDTO dto) {
-        Todo entity = todoRepository.getReferenceById(id);
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-        modelMapper.map(dto, entity);
 
-        entity = todoRepository.save(entity);
-        return new TodoDTO(entity);
+        try {Todo entity = todoRepository.getReferenceById(id);
+            modelMapper.getConfiguration().setSkipNullEnabled(true);
+            modelMapper.map(dto, entity);
+
+            entity = todoRepository.save(entity);
+            return new TodoDTO(entity);
+        } catch (Exception e) {
+            throw new ResorceNotFoundExceprion("Recurso nao encontrado" );
+        }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id){
+        if(!todoRepository.existsById(id)){
+            throw new ResorceNotFoundExceprion("Recurso nao encontrado" );
+        }
+
         todoRepository.deleteById(id);
+
     }
 }
