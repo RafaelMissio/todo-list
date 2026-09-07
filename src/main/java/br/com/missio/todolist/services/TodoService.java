@@ -1,7 +1,11 @@
 package br.com.missio.todolist.services;
 
+import br.com.missio.todolist.dto.TodoDTO;
 import br.com.missio.todolist.entities.Todo;
 import br.com.missio.todolist.repositories.TodoRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +20,20 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    public List<Todo>  create(Todo todo) {
-        todoRepository.save(todo);
-        return findAll();
+    public Todo  create(Todo todo) {
+        return todoRepository.save(todo);
     }
 
-    public List<Todo> findAll() {
-        Sort sort = Sort.by("prioridade").descending().and((
-                Sort.by("nome").ascending()
-                ));
-        return todoRepository.findAll(sort);
+    public List<TodoDTO> findAll(Pageable pageable) {
+
+        Page<Todo> result = todoRepository.findAll(pageable);
+        return result.stream().map(TodoDTO::new).toList();
     }
 
-    public Todo findById(Long id) {
-        return todoRepository.findById(id).orElse(null);
+    @Transactional
+    public TodoDTO findById(Long id) {
+       Todo todo = todoRepository.findById(id).get();
+       return new TodoDTO(todo);
     }
 
     public Todo update(Todo todo) {
@@ -44,6 +48,6 @@ public class TodoService {
         if(todoRepository.existsById(id)) {
             todoRepository.deleteById(id);
         }
-        return findAll();
+        return todoRepository.findAll();
     }
 }
