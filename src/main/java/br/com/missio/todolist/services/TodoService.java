@@ -33,10 +33,9 @@ public class TodoService {
     }
 
    @Transactional(readOnly = true)
-    public List<TodoDTO> findAll(Pageable pageable) {
-
+    public Page<TodoDTO> findAll(Pageable pageable) {
         Page<Todo> result = todoRepository.findAll(pageable);
-        return result.stream().map(TodoDTO::new).toList();
+        return result.map(TodoDTO::new);
     }
 
     @Transactional(readOnly = true)

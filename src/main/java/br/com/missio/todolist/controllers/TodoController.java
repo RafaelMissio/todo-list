@@ -24,21 +24,22 @@ public class TodoController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<TodoDTO> findByID(@PathVariable Long id){
-        return ResponseEntity.ok().body(todoService.findById(id));
+        TodoDTO todoDTO = todoService.findById(id);
+        return ResponseEntity.ok().body(todoDTO);
     }
 
     @GetMapping
     public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable){
-        return ResponseEntity.ok().body((Page<TodoDTO>) todoService.findAll(pageable));
+        Page<TodoDTO> dto = (Page<TodoDTO>) todoService.findAll(pageable);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
-    public ResponseEntity<Page<TodoDTO>> create(@RequestBody TodoDTO todo) {
-        TodoDTO createdTodo = todoService.create(todo);
+    public ResponseEntity<TodoDTO> create(@RequestBody TodoDTO dto) {
+        dto = todoService.create(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(createdTodo.getId()).toUri();
-        return ResponseEntity.created(uri).body((Page<TodoDTO>) createdTodo);
-
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
 
